@@ -1,7 +1,10 @@
 from django.shortcuts import render
 from .models import Investment
 from collections import defaultdict
+from django.contrib.auth.decorators import login_required
 
+
+@login_required
 def dashboard_view(request):
     investments = Investment.objects.all()
     total = sum([inv.amount_invested for inv in investments])

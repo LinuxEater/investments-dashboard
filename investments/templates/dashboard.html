@@ -33,5 +33,40 @@
             </tbody>
         </table>
     </div>
+
+    <div class="mt-5" style="max-width: 400px; margin: 0 auto;">
+    <h4 class="text-center">Distribution by Investment Type</h4>
+    <canvas id="typeChart"></canvas>
+    </div>
+
+<script>
+    const ctx = document.getElementById('typeChart').getContext('2d');
+    const typeChart = new Chart(ctx, {
+        type: 'pie',
+        data: {
+            labels: {{ labels|safe }},
+            datasets: [{
+                label: 'Investment Distribution',
+                data: {{ values|safe }},
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.6)',
+                    'rgba(54, 162, 235, 0.6)',
+                    'rgba(255, 206, 86, 0.6)',
+                    'rgba(75, 192, 192, 0.6)',
+                    'rgba(153, 102, 255, 0.6)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                }
+            }
+        }
+    });
+</script>
 </body>
 </html>
