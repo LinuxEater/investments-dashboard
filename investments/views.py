@@ -1,12 +1,22 @@
 from django.shortcuts import render
 from .models import Investment
-
-# Create your views here.
+from collections import defaultdict
 
 def dashboard_view(request):
     investments = Investment.objects.all()
     total = sum([inv.amount_invested for inv in investments])
+
+    # Aggregate by type
+    data_by_type = defaultdict(float)
+    for inv in investments:
+        data_by_type[inv.get_type_display()] += float(inv.amount_invested)
+
+    labels = list(data_by_type.keys())
+    values = list(data_by_type.values())
+
     return render(request, 'dashboard.html', {
         'investments': investments,
-        'total': total
+        'total': total,
+        'labels': labels,
+        'values': values,
     })
