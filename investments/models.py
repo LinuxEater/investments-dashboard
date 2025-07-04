@@ -4,7 +4,7 @@ from django.db import models
 
 class Investment(models.Model):
     TYPE_CHOICES = [
-        ('FII', 'Real Estate Fund'),
+        ('FIIs', 'Real Estate Fund'),
         ('CDB', 'CDB'),
         ('STOCK', 'Stock'),
         ('CRYPTO', 'Cryptocurrency'),
