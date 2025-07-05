@@ -30,7 +30,8 @@ class Expenses(models.Model):
     ]
     name = models.CharField(max_length=50)
     amount = models.DecimalField(max_digits=10, decimal_places=2)
+    type = models.CharField(max_length=10, choices=TYPE_CHOICES)
     date = models.DateField()
 
     def __str__(self):
-        return f"{self.name} - {self.amount}"    
+        return f"{self.name} - {self.amount}"

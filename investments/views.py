@@ -1,5 +1,7 @@
 from django.shortcuts import render
+from django.db.models import Sum
 from .models import Investment, Expenses
+from django.db.models.functions import TruncMonth
 from collections import defaultdict
 from django.contrib.auth.decorators import login_required
 
@@ -24,13 +26,32 @@ def dashboard_view(request):
         'values': values,
     })
     
+@login_required
 def expenses_view(request):
     expenses = Expenses.objects.all()
-    total = sum([exp.amount for exp in expenses])
-    
+    total = sum(float(exp.amount) for exp in expenses)
+
+    # Agrupar por 'name' para gráfico de pizza (gastos por produto)
+    by_name = expenses.values('name').annotate(total=Sum('amount'))
+
+    # Agrupar por mês para gráfico de linha
+    by_month = expenses.annotate(month=TruncMonth('date'))\
+                       .values('month')\
+                       .annotate(total=Sum('amount'))\
+                       .order_by('month')
+
     context = {
         'expenses': expenses,
-        'total': total, 
+        'total': total,
+        'chart_data': {
+            'labels': [item['name'] for item in by_name],       # agrupando por produto
+            'values': [float(item['total']) for item in by_name],
+            'line_labels': [
+                item['month'].strftime('%b/%y') if item['month'] else ''
+                for item in by_month
+            ],
+            'line_values': [float(item['total']) for item in by_month],
+        }
     }
-    
+
     return render(request, 'expenses.html', context)
