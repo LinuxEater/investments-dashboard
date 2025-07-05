@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .models import Investment
+from .models import Investment, Expenses
 from collections import defaultdict
 from django.contrib.auth.decorators import login_required
 
@@ -23,3 +23,14 @@ def dashboard_view(request):
         'labels': labels,
         'values': values,
     })
+    
+def expenses_view(request):
+    expenses = Expenses.objects.all()
+    total = sum([exp.amount for exp in expenses])
+    
+    context = {
+        'expenses': expenses,
+        'total': total, 
+    }
+    
+    return render(request, 'expenses.html', context)
